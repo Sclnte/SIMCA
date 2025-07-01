@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SIMCA - Monitoreo Climático</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+
+    .logo {
+        color: #ffffff;
+        font-weight: bold;
+        font-size: 1.5rem;
+        padding: 1rem 4rem 0.5rem 45rem; /* Arriba, derecha, abajo, izquierda */
+        line-height: 1; /* Control exacto de altura */
+        display: inline-block;
+    }
+    
+    .weather-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+      margin-bottom: 3rem;
+    }
+    
+    .weather-card {
+      background-color: rgba(0,0,0,0.65);
+      border-radius: 1rem;
+      box-shadow: 0 0 10px 1px rgba(163,230,53,0.7);
+      padding: 2rem;
+      flex: 1 1 300px;
+      min-width: 280px;
+      max-width: 400px;
+      text-align: center;
+    }
+    
+    .weather-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+    
+    .weather-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 0.5rem 0;
+      color: #a3e635;
+    }
+    
+    .weather-label {
+      font-size: 1.2rem;
+      color: #d1d5db;
+      margin-bottom: 0.5rem;
+    }
+    
+    .weather-description {
+      font-size: 1rem;
+      color: #9ca3af;
+      margin-top: 1rem;
+    }
+    
+    .forecast-container {
+      display: flex;
+      overflow-x: auto;
+      gap: 1.5rem;
+      padding: 1rem 0;
+      margin: 2rem 0;
+    }
+    
+    .forecast-card {
+      background-color: rgba(0,0,0,0.5);
+      border-radius: 0.8rem;
+      padding: 1.5rem;
+      min-width: 150px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    
+    .forecast-day {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .forecast-temp {
+      font-weight: 700;
+      color: #a3e635;
+    }
+    
+    .chart-container {
+      background-color: rgba(0,0,0,0.5);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-top: 2rem;
+      height: 400px;
+    }
+  </style>
+</head>
+<body>
+  <nav role="navigation" aria-label="Menú principal">
+    <span class="logo" aria-label="Logo SIMCA">SIMCA</span>
+    <ul>
+      <li><a href="index1.html" class="nav-link" tabindex="0">Inicio</a></li>
+      <li><a href="clima.html" class="nav-link active" tabindex="0">Clima</a></li>
+      <li><a href="sensores.html" class="nav-link" tabindex="0">Sensores</a></li>
+      <li><a href="registros.html" class="nav-link" tabindex="0">Registros</a></li>
+    </ul>
+  </nav>
+
+  <header id="clima" aria-label="Sección de monitoreo climático">
+    <section class="intro" role="region" aria-labelledby="clima-title">
+      <img src="estacion.jpg" alt="Estación meteorológica en un campo agrícola" />
+      <p id="clima-title">Monitoreo climático en tiempo real para optimizar las decisiones agrícolas y proteger tus cultivos.</p>
+    </section>
+  </header>
+
+  <main>
+    <hr class="custom-hr" aria-hidden="true"/>
+    <section id="datos-climaticos" aria-label="Datos climáticos actuales">
+      <h2>Condiciones Actuales</h2>
+      <div class="weather-container">
+        <article class="weather-card" aria-labelledby="temperatura-title">
+          <div class="weather-icon">🌡️</div>
+          <h3 id="temperatura-title" class="weather-label">Temperatura</h3>
+          <div class="weather-value" id="current-temp">24.5°C</div>
+          <div class="weather-description">Sensación térmica: 25.1°C</div>
+        </article>
+        
+        <article class="weather-card" aria-labelledby="humedad-title">
+          <div class="weather-icon">💧</div>
+          <h3 id="humedad-title" class="weather-label">Humedad</h3>
+          <div class="weather-value" id="current-humidity">68%</div>
+          <div class="weather-description">Punto de rocío: 18°C</div>
+        </article>
+        
+        <article class="weather-card" aria-labelledby="viento-title">
+          <div class="weather-icon">🌬️</div>
+          <h3 id="viento-title" class="weather-label">Viento</h3>
+          <div class="weather-value" id="current-wind">12 km/h</div>
+          <div class="weather-description">Dirección: NE</div>
+        </article>
+        
+        <article class="weather-card" aria-labelledby="precipitacion-title">
+          <div class="weather-icon">🌧️</div>
+          <h3 id="precipitacion-title" class="weather-label">Precipitación</h3>
+          <div class="weather-value" id="current-rain">0.0 mm</div>
+          <div class="weather-description">Última lluvia: 3 días</div>
+        </article>
+      </div>
+    </section>
+    
+    <section id="pronostico" aria-label="Pronóstico del tiempo">
+      <h2>Pronóstico para los próximos 5 días</h2>
+      <div class="forecast-container">
+        <article class="forecast-card" aria-label="Pronóstico para mañana">
+          <div class="forecast-day">Mañana</div>
+          <div>🌤️</div>
+          <div class="forecast-temp">25° / 16°</div>
+          <div>20% lluvia</div>
+        </article>
+        <article class="forecast-card" aria-label="Pronóstico para pasado mañana">
+          <div class="forecast-day">Pasado</div>
+          <div>☀️</div>
+          <div class="forecast-temp">27° / 17°</div>
+          <div>10% lluvia</div>
+        </article>
+        <article class="forecast-card" aria-label="Pronóstico para día 3">
+          <div class="forecast-day">Día 3</div>
+          <div>⛅</div>
+          <div class="forecast-temp">26° / 18°</div>
+          <div>30% lluvia</div>
+        </article>
+        <article class="forecast-card" aria-label="Pronóstico para día 4">
+          <div class="forecast-day">Día 4</div>
+          <div>🌧️</div>
+          <div class="forecast-temp">22° / 17°</div>
+          <div>70% lluvia</div>
+        </article>
+        <article class="forecast-card" aria-label="Pronóstico para día 5">
+          <div class="forecast-day">Día 5</div>
+          <div>🌦️</div>
+          <div class="forecast-temp">24° / 16°</div>
+          <div>40% lluvia</div>
+        </article>
+      </div>
+    </section>
+    
+    <section id="historico" aria-label="Gráfico histórico de temperatura">
+      <h2>Variación de temperatura (últimas 24 horas)</h2>
+      <div class="chart-container">
+        <!-- Aquí iría un gráfico generado con Chart.js o similar -->
+        <p style="text-align: center; margin-top: 150px;">[Gráfico de temperatura se actualizará aquí]</p>
+      </div>
+    </section>
+  </main>
+  
+  <script>
+    // Simulación de datos actualizados
+    function updateWeatherData() {
+      // Temperatura aleatoria entre 20 y 30
+      const temp = (20 + Math.random() * 10).toFixed(1);
+      document.getElementById('current-temp').textContent = temp + '°C';
+      
+      // Humedad aleatoria entre 50% y 80%
+      const humidity = Math.floor(50 + Math.random() * 30);
+      document.getElementById('current-humidity').textContent = humidity + '%';
+      
+      // Viento aleatorio entre 5 y 20 km/h
+      const wind = Math.floor(5 + Math.random() * 15);
+      document.getElementById('current-wind').textContent = wind + ' km/h';
+    }
+    
+    // Actualizar cada 5 segundos (simulación)
+    updateWeatherData();
+    setInterval(updateWeatherData, 5000);
+  </script>
+</body>
+</html>

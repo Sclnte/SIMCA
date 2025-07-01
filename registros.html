@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SIMCA - Registros Históricos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+
+    .logo {
+        color: #ffffff;
+        font-weight: bold;
+        font-size: 1.5rem;
+        padding: 1rem 4rem 0.5rem 45rem; /* Arriba, derecha, abajo, izquierda */
+        line-height: 1; /* Control exacto de altura */
+        display: inline-block;
+    }
+
+    .filters-container {
+      background-color: rgba(0,0,0,0.5);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .filter-group {
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .filter-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #d1d5db;
+    }
+    
+    .filter-input option {
+        background-color: #333333;
+        color: #ffffff;
+        padding: 0.5rem;
+    }
+
+    .filter-input {
+    
+      width: 100%;
+      padding: 0.5rem 1rem;
+      background-color: rgba(255,255,255,0.1);
+      border: 1px solid rgba(163,230,53,0.3);
+      border-radius: 0.5rem;
+      color: white;
+    }
+    
+    .filter-input:focus {
+      outline: none;
+      border-color: #a3e635;
+      box-shadow: 0 0 0 2px rgba(163,230,53,0.3);
+    }
+    
+    .filter-button {
+      background-color: #a3e635;
+      color: black;
+      border: none;
+      padding: 0.5rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .filter-button:hover {
+      background-color: #84cc16;
+    }
+    
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+      background-color: rgba(0,0,0,0.5);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    
+    .data-table th {
+      background-color: rgba(163,230,53,0.2);
+      padding: 1rem;
+      text-align: left;
+      font-weight: 700;
+    }
+    
+    .data-table td {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .data-table tr:hover {
+      background-color: rgba(163,230,53,0.1);
+    }
+    
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+    }
+    
+    .page-button {
+      background-color: rgba(0,0,0,0.5);
+      color: white;
+      border: 1px solid rgba(163,230,53,0.3);
+      padding: 0.5rem 1rem;
+      border-radius: 0.3rem;
+      cursor: pointer;
+    }
+    
+    .page-button.active {
+      background-color: #a3e635;
+      color: black;
+      font-weight: 600;
+    }
+    
+    .page-button:hover:not(.active) {
+      background-color: rgba(163,230,53,0.2);
+    }
+    
+    .export-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      justify-content: flex-end;
+    }
+    
+    .export-button {
+      background-color: rgba(0,0,0,0.5);
+      color: white;
+      border: 1px solid rgba(163,230,53,0.3);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .export-button:hover {
+      background-color: rgba(163,230,53,0.2);
+    }
+    
+    .status-badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 1rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    
+    .status-normal {
+      background-color: rgba(74, 222, 128, 0.2);
+      color: #4ade80;
+    }
+    
+    .status-warning {
+      background-color: rgba(234, 179, 8, 0.2);
+      color: #eab308;
+    }
+    
+    .status-alert {
+      background-color: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+  </style>
+</head>
+<body>
+  <nav role="navigation" aria-label="Menú principal">
+    <span class="logo" aria-label="Logo SIMCA">SIMCA</span>
+    <ul>
+      <li><a href="index1.html" class="nav-link" tabindex="0">Inicio</a></li>
+      <li><a href="clima.html" class="nav-link" tabindex="0">Clima</a></li>
+      <li><a href="sensores.html" class="nav-link" tabindex="0">Sensores</a></li>
+      <li><a href="registros.html" class="nav-link active" tabindex="0">Registros</a></li>
+    </ul>
+  </nav>
+
+  <header id="registros" aria-label="Sección de registros históricos">
+    <section class="intro" role="region" aria-labelledby="registros-title">
+      <img src="agricultura.jpg" alt="Tablero de control con gráficos y datos agrícolas" />
+      <p id="registros-title">Registros históricos de todas las mediciones para análisis y toma de decisiones informadas.</p>
+    </section>
+  </header>
+
+  <main>
+    <hr class="custom-hr" aria-hidden="true"/>
+    <section id="filtros" aria-label="Filtros de búsqueda">
+      <h2>Filtrar Registros</h2>
+      <div class="filters-container">
+        <div class="filter-row">
+          <div class="filter-group">
+            <label for="fecha-inicio" class="filter-label">Fecha Inicio</label>
+            <input type="date" id="fecha-inicio" class="filter-input">
+          </div>
+          <div class="filter-group">
+            <label for="fecha-fin" class="filter-label">Fecha Fin</label>
+            <input type="date" id="fecha-fin" class="filter-input">
+          </div>
+          <div class="filter-group">
+            <label for="tipo-sensor" class="filter-label">Tipo de Sensor</label>
+            <select id="tipo-sensor" class="filter-input">
+              <option value="">Todos</option>
+              <option value="humedad-suelo">Humedad del Suelo</option>
+              <option value="humedad-ambiental">Humedad Ambiental</option>
+              <option value="temperatura">Temperatura</option>
+              <option value="luminosidad">Luminosidad</option>
+            </select>
+          </div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-group">
+            <label for="sector" class="filter-label">Sector</label>
+            <select id="sector" class="filter-input">
+              <option value="">Todos</option>
+              <option value="norte">Norte</option>
+              <option value="sur">Sur</option>
+              <option value="este">Este</option>
+              <option value="oeste">Oeste</option>
+              <option value="central">Central</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="cultivo" class="filter-label">Cultivo</label>
+            <select id="cultivo" class="filter-input">
+              <option value="">Todos</option>
+              <option value="maiz">Maíz</option>
+              <option value="soja">Soja</option>
+              <option value="trigo">Trigo</option>
+              <option value="hortalizas">Hortalizas</option>
+            </select>
+          </div>
+          <div class="filter-group" style="align-self: flex-end;">
+            <button class="filter-button">Aplicar Filtros</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section id="tabla-datos" aria-label="Tabla de registros históricos">
+      <h2>Registros Históricos</h2>
+      <div style="overflow-x: auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Fecha y Hora</th>
+              <th>Tipo de Sensor</th>
+              <th>Valor</th>
+              <th>Sector</th>
+              <th>Cultivo</th>
+              <th>Estado</th>
+              <th>Batería</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2023-06-15 08:30</td>
+              <td>Humedad del Suelo</td>
+              <td>45%</td>
+              <td>Norte</td>
+              <td>Maíz</td>
+              <td><span class="status-badge status-normal">Normal</span></td>
+              <td>82%</td>
+            </tr>
+            <tr>
+              <td>2023-06-15 08:30</td>
+              <td>Humedad Ambiental</td>
+              <td>72%</td>
+              <td>Norte</td>
+              <td>Maíz</td>
+              <td><span class="status-badge status-warning">Alerta</span></td>
+              <td>75%</td>
+            </tr>
+            <tr>
+              <td>2023-06-15 08:15</td>
+              <td>Humedad del Suelo</td>
+              <td>38%</td>
+              <td>Sur</td>
+              <td>Soja</td>
+              <td><span class="status-badge status-warning">Alerta</span></td>
+              <td>68%</td>
+            </tr>
+            <tr>
+              <td>2023-06-15 08:15</td>
+              <td>Temperatura</td>
+              <td>24.5°C</td>
+              <td>Central</td>
+              <td>Hortalizas</td>
+              <td><span class="status-badge status-normal">Normal</span></td>
+              <td>90%</td>
+            </tr>
+            <tr>
+              <td>2023-06-15 08:00</td>
+              <td>Luminosidad</td>
+              <td>850 lux</td>
+              <td>Este</td>
+              <td>Trigo</td>
+              <td><span class="status-badge status-normal">Normal</span></td>
+              <td>88%</td>
+            </tr>
+            <tr>
+              <td>2023-06-15 08:00</td>
+              <td>Humedad del Suelo</td>
+              <td>52%</td>
+              <td>Oeste</td>
+              <td>Maíz</td>
+              <td><span class="status-badge status-normal">Normal</span></td>
+              <td>79%</td>
+            </tr>
+            <tr>
+              <td>2023-06-15 07:45</td>
+              <td>Humedad Ambiental</td>
+              <td>65%</td>
+              <td>Central</td>
+              <td>Hortalizas</td>
+              <td><span class="status-badge status-normal">Normal</span></td>
+              <td>72%</td>
+            </tr>
+            <tr>
+              <td>2023-06-15 07:45</td>
+              <td>Temperatura</td>
+              <td>22.1°C</td>
+              <td>Norte</td>
+              <td>Maíz</td>
+              <td><span class="status-badge status-normal">Normal</span></td>
+              <td>85%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="pagination">
+        <button class="page-button">&laquo;</button>
+        <button class="page-button active">1</button>
+        <button class="page-button">2</button>
+        <button class="page-button">3</button>
+        <button class="page-button">4</button>
+        <button class="page-button">5</button>
+        <button class="page-button">&raquo;</button>
+      </div>
+      
+      <div class="export-buttons">
+        <button class="export-button">
+          <span>📄</span> Exportar CSV
+        </button>
+        <button class="export-button">
+          <span>📊</span> Exportar Excel
+        </button>
+        <button class="export-button">
+          <span>🖨️</span> Imprimir
+        </button>
+      </div>
+    </section>
+  </main>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

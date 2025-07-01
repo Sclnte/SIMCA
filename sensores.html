@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SIMCA - Datos de Sensores</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+
+    .logo {
+        color: #ffffff;
+        font-weight: bold;
+        font-size: 1.5rem;
+        padding: 1rem 4rem 0.5rem 45rem; /* Arriba, derecha, abajo, izquierda */
+        line-height: 1; /* Control exacto de altura */
+        display: inline-block;
+    }
+
+    .sensor-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+      margin-bottom: 3rem;
+    }
+    
+    .sensor-card {
+      background-color: rgba(0,0,0,0.65);
+      border-radius: 1rem;
+      box-shadow: 0 0 10px 1px rgba(163,230,53,0.7);
+      padding: 2rem;
+      flex: 1 1 300px;
+      min-width: 280px;
+      max-width: 500px;
+    }
+    
+    .sensor-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .sensor-icon {
+      font-size: 2.5rem;
+      margin-right: 1.5rem;
+    }
+    
+    .sensor-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+    
+    .sensor-location {
+      font-size: 1rem;
+      color: #9ca3af;
+    }
+    
+    .sensor-value {
+      font-size: 3rem;
+      font-weight: 700;
+      text-align: center;
+      margin: 1.5rem 0;
+      color: #a3e635;
+    }
+    
+    .sensor-status {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      border-radius: 1rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    
+    .status-normal {
+      background-color: rgba(74, 222, 128, 0.2);
+      color: #4ade80;
+    }
+    
+    .status-warning {
+      background-color: rgba(234, 179, 8, 0.2);
+      color: #eab308;
+    }
+    
+    .status-alert {
+      background-color: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+    
+    .sensor-details {
+      margin-top: 1.5rem;
+    }
+    
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .detail-label {
+      color: #9ca3af;
+    }
+    
+    .detail-value {
+      font-weight: 600;
+    }
+    
+    .chart-container {
+      background-color: rgba(0,0,0,0.5);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-top: 2rem;
+      height: 400px;
+      position: relative;
+    }
+    
+    .sensor-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    
+    .last-updated {
+      font-size: 0.8rem;
+      color: #9ca3af;
+      text-align: right;
+      margin-top: 0.5rem;
+    }
+    
+    .sensor-controls {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+    }
+    
+    .control-button {
+      background-color: rgba(163,230,53,0.2);
+      color: #a3e635;
+      border: 1px solid #a3e635;
+      padding: 0.3rem 0.8rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    
+    .control-button:hover {
+      background-color: rgba(163,230,53,0.3);
+    }
+  </style>
+</head>
+<body>
+  <nav role="navigation" aria-label="Menú principal">
+    <span class="logo" aria-label="Logo SIMCA">SIMCA</span>
+    <ul>
+      <li><a href="index1.html" class="nav-link" tabindex="0">Inicio</a></li>
+      <li><a href="clima.html" class="nav-link" tabindex="0">Clima</a></li>
+      <li><a href="Sensores.html" class="nav-link active" tabindex="0">Sensores</a></li>
+      <li><a href="Registros.html" class="nav-link" tabindex="0">Registros</a></li>
+    </ul>
+  </nav>
+
+  <header id="sensores" aria-label="Sección de datos de sensores">
+    <section class="intro" role="region" aria-labelledby="sensores-title">
+      <img src="sensores.webp" alt="Sensores agrícolas instalados en un campo de cultivo" />
+      <p id="sensores-title">Monitoreo preciso de las condiciones del suelo y ambiente para una agricultura de precisión.</p>
+    </section>
+  </header>
+
+  <main>
+    <hr class="custom-hr" aria-hidden="true"/>
+    <section id="datos-sensores" aria-label="Datos de los sensores en tiempo real">
+      <h2>Datos de Sensores en Tiempo Real</h2>
+      <div class="sensor-container">
+        <article class="sensor-card" aria-labelledby="sensor-humedad-suelo-title">
+          <div class="sensor-header">
+            <div class="sensor-icon">🌱</div>
+            <div>
+              <h3 id="sensor-humedad-suelo-title" class="sensor-title">Humedad del Suelo</h3>
+              <div class="sensor-location">Sector Norte - Cultivo Maíz</div>
+            </div>
+          </div>
+          <div class="sensor-value" id="soil-moisture">42%</div>
+          <div>
+            <span class="sensor-status status-normal" id="soil-status">Normal</span>
+          </div>
+          <div class="sensor-details">
+            <div class="detail-row">
+              <span class="detail-label">Óptimo para cultivo:</span>
+              <span class="detail-value">40-60%</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Última actualización:</span>
+              <span class="detail-value" id="soil-moisture-time">hace 15 segundos</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Batería:</span>
+              <span class="detail-value" id="soil-battery">78%</span>
+            </div>
+          </div>
+          <div class="sensor-controls">
+            <button class="control-button" onclick="calibrateSensor('soil')">Calibrar</button>
+            <button class="control-button" onclick="toggleSensor('soil')">Apagar Sensor</button>
+          </div>
+        </article>
+        
+        <article class="sensor-card" aria-labelledby="sensor-humedad-ambiental-title">
+          <div class="sensor-header">
+            <div class="sensor-icon">💨</div>
+            <div>
+              <h3 id="sensor-humedad-ambiental-title" class="sensor-title">Humedad Ambiental</h3>
+              <div class="sensor-location">Sector Central - Invernadero</div>
+            </div>
+          </div>
+          <div class="sensor-value" id="air-humidity">65%</div>
+          <div>
+            <span class="sensor-status status-warning" id="air-status">Alerta</span>
+          </div>
+          <div class="sensor-details">
+            <div class="detail-row">
+              <span class="detail-label">Óptimo para cultivo:</span>
+              <span class="detail-value">50-70%</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Última actualización:</span>
+              <span class="detail-value" id="air-humidity-time">hace 20 segundos</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Batería:</span>
+              <span class="detail-value" id="air-battery">65%</span>
+            </div>
+          </div>
+          <div class="sensor-controls">
+            <button class="control-button" onclick="calibrateSensor('air')">Calibrar</button>
+            <button class="control-button" onclick="toggleSensor('air')">Apagar Sensor</button>
+          </div>
+        </article>
+      </div>
+    </section>
+    
+    <section id="historico-sensores" aria-label="Gráficos históricos de sensores">
+      <h2>Variación de Humedad (últimas 24 horas)</h2>
+      <div class="sensor-grid">
+        <div class="chart-container">
+          <canvas id="soilChart"></canvas>
+          <div class="last-updated">Actualizado: <span id="soil-chart-time"></span></div>
+        </div>
+        <div class="chart-container">
+          <canvas id="airChart"></canvas>
+          <div class="last-updated">Actualizado: <span id="air-chart-time"></span></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <script>
+    // Variables de estado
+    let soilSensorActive = true;
+    let airSensorActive = true;
+    let soilCalibrationCount = 0;
+    let airCalibrationCount = 0;
+    
+    // Datos históricos para gráficos
+    let timestamps = [];
+    let soilData = [];
+    let airData = [];
+    
+    // Inicializar datos para las últimas 24 horas
+    function initializeHistoricalData() {
+      const now = new Date();
+      timestamps = [];
+      soilData = [];
+      airData = [];
+      
+      for (let i = 23; i >= 0; i--) {
+        const time = new Date(now);
+        time.setHours(now.getHours() - i);
+        timestamps.push(time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}));
+        
+        // Datos iniciales con cierta variación
+        const baseSoil = 45 + Math.sin(i * 0.3) * 10;
+        const baseAir = 60 + Math.cos(i * 0.4) * 10;
+        
+        soilData.push(Math.max(20, Math.min(80, baseSoil + (Math.random() * 6 - 3))));
+        airData.push(Math.max(30, Math.min(90, baseAir + (Math.random() * 8 - 4))));
+      }
+      
+      updateChartTimes();
+    }
+    
+    // Inicializar gráficos con Chart.js
+    let soilChart, airChart;
+    
+    function initializeCharts() {
+      const soilCtx = document.getElementById('soilChart').getContext('2d');
+      const airCtx = document.getElementById('airChart').getContext('2d');
+      
+      soilChart = new Chart(soilCtx, {
+        type: 'line',
+        data: {
+          labels: timestamps,
+          datasets: [{
+            label: 'Humedad del Suelo (%)',
+            data: soilData,
+            borderColor: '#a3e635',
+            backgroundColor: 'rgba(163, 230, 53, 0.1)',
+            borderWidth: 2,
+            tension: 0.3,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: false,
+              min: 20,
+              max: 80,
+              grid: {
+                color: 'rgba(255, 255, 255, 0.1)'
+              },
+              ticks: {
+                color: '#d1d5db'
+              }
+            },
+            x: {
+              grid: {
+                color: 'rgba(255, 255, 255, 0.1)'
+              },
+              ticks: {
+                color: '#d1d5db',
+                maxTicksLimit: 10
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              labels: {
+                color: '#d1d5db',
+                font: {
+                  size: 14
+                }
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              titleColor: '#a3e635',
+              bodyColor: '#d1d5db',
+              borderColor: '#a3e635',
+              borderWidth: 1
+            }
+          }
+        }
+      });
+      
+      airChart = new Chart(airCtx, {
+        type: 'line',
+        data: {
+          labels: timestamps,
+          datasets: [{
+            label: 'Humedad Ambiental (%)',
+            data: airData,
+            borderColor: '#60a5fa',
+            backgroundColor: 'rgba(96, 165, 250, 0.1)',
+            borderWidth: 2,
+            tension: 0.3,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: false,
+              min: 30,
+              max: 90,
+              grid: {
+                color: 'rgba(255, 255, 255, 0.1)'
+              },
+              ticks: {
+                color: '#d1d5db'
+              }
+            },
+            x: {
+              grid: {
+                color: 'rgba(255, 255, 255, 0.1)'
+              },
+              ticks: {
+                color: '#d1d5db',
+                maxTicksLimit: 10
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              labels: {
+                color: '#d1d5db',
+                font: {
+                  size: 14
+                }
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              titleColor: '#60a5fa',
+              bodyColor: '#d1d5db',
+              borderColor: '#60a5fa',
+              borderWidth: 1
+            }
+          }
+        }
+      });
+    }
+    
+    // Actualizar datos de sensores
+    function updateSensorData() {
+      const now = new Date();
+      const currentHour = now.getHours();
+      const currentMinute = now.getMinutes();
+      
+      // Actualizar timestamp
+      timestamps.shift();
+      timestamps.push(now.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}));
+      
+      // Simular patrones circadianos
+      const dayCycle = Math.sin((currentHour + currentMinute / 60) * Math.PI / 12);
+      
+      // Generar nuevos datos con cierta aleatoriedad pero manteniendo patrones
+      if (soilSensorActive) {
+        const newSoilValue = 45 + dayCycle * 10 + (Math.random() * 6 - 3);
+        soilData.shift();
+        soilData.push(Math.max(20, Math.min(80, newSoilValue)));
+        
+        // Actualizar display
+        const displaySoil = soilData[soilData.length - 1].toFixed(1);
+        document.getElementById('soil-moisture').textContent = displaySoil + '%';
+        
+        // Actualizar estado
+        const soilStatus = document.getElementById('soil-status');
+        if (displaySoil < 40 || displaySoil > 60) {
+          soilStatus.className = 'sensor-status status-warning';
+          soilStatus.textContent = 'Alerta';
+        } else {
+          soilStatus.className = 'sensor-status status-normal';
+          soilStatus.textContent = 'Normal';
+        }
+        
+        // Actualizar batería (se degrada lentamente)
+        const currentBattery = parseFloat(document.getElementById('soil-battery').textContent);
+        const newBattery = Math.max(0, currentBattery - (Math.random() * 0.2));
+        document.getElementById('soil-battery').textContent = newBattery.toFixed(0) + '%';
+        
+        // Cambiar color si batería baja
+        if (newBattery < 20) {
+          document.getElementById('soil-battery').style.color = '#ef4444';
+        } else if (newBattery < 40) {
+          document.getElementById('soil-battery').style.color = '#eab308';
+        } else {
+          document.getElementById('soil-battery').style.color = 'inherit';
+        }
+      }
+      
+      if (airSensorActive) {
+        const newAirValue = 60 + dayCycle * 8 + (Math.random() * 8 - 4);
+        airData.shift();
+        airData.push(Math.max(30, Math.min(90, newAirValue)));
+        
+        // Actualizar display
+        const displayAir = airData[airData.length - 1].toFixed(1);
+        document.getElementById('air-humidity').textContent = displayAir + '%';
+        
+        // Actualizar estado
+        const airStatus = document.getElementById('air-status');
+        if (displayAir < 50 || displayAir > 70) {
+          airStatus.className = 'sensor-status status-warning';
+          airStatus.textContent = 'Alerta';
+        } else {
+          airStatus.className = 'sensor-status status-normal';
+          airStatus.textContent = 'Normal';
+        }
+        
+        // Actualizar batería (se degrada lentamente)
+        const currentBattery = parseFloat(document.getElementById('air-battery').textContent);
+        const newBattery = Math.max(0, currentBattery - (Math.random() * 0.3));
+        document.getElementById('air-battery').textContent = newBattery.toFixed(0) + '%';
+        
+        // Cambiar color si batería baja
+        if (newBattery < 20) {
+          document.getElementById('air-battery').style.color = '#ef4444';
+        } else if (newBattery < 40) {
+          document.getElementById('air-battery').style.color = '#eab308';
+        } else {
+          document.getElementById('air-battery').style.color = 'inherit';
+        }
+      }
+      
+      // Actualizar tiempos
+      document.getElementById('soil-moisture-time').textContent = 'hace 0 segundos';
+      document.getElementById('air-humidity-time').textContent = 'hace 0 segundos';
+      
+      // Actualizar gráficos
+      updateCharts();
+      updateChartTimes();
+    }
+    
+    // Actualizar gráficos con nuevos datos
+    function updateCharts() {
+      soilChart.data.labels = timestamps;
+      soilChart.data.datasets[0].data = soilData;
+      soilChart.update();
+      
+      airChart.data.labels = timestamps;
+      airChart.data.datasets[0].data = airData;
+      airChart.update();
+    }
+    
+    // Actualizar tiempos de los gráficos
+    function updateChartTimes() {
+      const now = new Date();
+      document.getElementById('soil-chart-time').textContent = now.toLocaleString();
+      document.getElementById('air-chart-time').textContent = now.toLocaleString();
+    }
+    
+    // Función para calibrar sensores
+    function calibrateSensor(sensorType) {
+      if (sensorType === 'soil') {
+        soilCalibrationCount++;
+        alert(`Sensor de humedad del suelo calibrado (${soilCalibrationCount} veces)`);
+        // Mejorar precisión después de calibración
+        const currentValue = parseFloat(document.getElementById('soil-moisture').textContent);
+        const adjustedValue = currentValue + (Math.random() * 2 - 1);
+        document.getElementById('soil-moisture').textContent = adjustedValue.toFixed(1) + '%';
+      } else if (sensorType === 'air') {
+        airCalibrationCount++;
+        alert(`Sensor de humedad ambiental calibrado (${airCalibrationCount} veces)`);
+        // Mejorar precisión después de calibración
+        const currentValue = parseFloat(document.getElementById('air-humidity').textContent);
+        const adjustedValue = currentValue + (Math.random() * 2 - 1);
+        document.getElementById('air-humidity').textContent = adjustedValue.toFixed(1) + '%';
+      }
+    }
+    
+    // Función para activar/desactivar sensores
+    function toggleSensor(sensorType) {
+      const button = document.querySelector(`.sensor-card[aria-labelledby="sensor-${sensorType === 'soil' ? 'humedad-suelo' : 'humedad-ambiental'}-title"] .control-button:last-child`);
+      
+      if (sensorType === 'soil') {
+        soilSensorActive = !soilSensorActive;
+        if (soilSensorActive) {
+          button.textContent = 'Apagar Sensor';
+          document.getElementById('soil-moisture').style.color = '#a3e635';
+        } else {
+          button.textContent = 'Encender Sensor';
+          document.getElementById('soil-moisture').style.color = '#6b7280';
+        }
+      } else if (sensorType === 'air') {
+        airSensorActive = !airSensorActive;
+        if (airSensorActive) {
+          button.textContent = 'Apagar Sensor';
+          document.getElementById('air-humidity').style.color = '#a3e635';
+        } else {
+          button.textContent = 'Encender Sensor';
+          document.getElementById('air-humidity').style.color = '#6b7280';
+        }
+      }
+    }
+    
+    // Inicializar la página
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeHistoricalData();
+      initializeCharts();
+      updateSensorData();
+      setInterval(updateSensorData, 5000); // Actualizar cada 5 segundos
+    });
+  </script>
+</body>
+</html>
